@@ -1,0 +1,16 @@
+services:
+  postgres:
+    image: postgres:17
+    container_name: traderisk-postgres
+    restart: unless-stopped
+    environment:
+      POSTGRES_DB: traderisk
+      POSTGRES_USER: traderisk
+      POSTGRES_PASSWORD: traderisk_local
+    ports:
+      - "5432:5432"
+    volumes:
+      - traderisk_postgres_data:/var/lib/postgresql/data
+
+volumes:
+  traderisk_postgres_data:
