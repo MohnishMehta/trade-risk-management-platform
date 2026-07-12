@@ -1,10 +1,10 @@
-package com.sentinel_risk.sentinel_risk;
+package com.traderisk;
 
 import org.junit.jupiter.api.Test;
 import org.springframework.boot.test.context.SpringBootTest;
 
 @SpringBootTest
-class SentinelRiskApplicationTests {
+class TradeRiskManagementPlatformApplicationTests {
 
 	@Test
 	void contextLoads() {
