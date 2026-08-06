@@ -17,25 +17,37 @@ public class UserService {
         this.roleRepository = roleRepository;
     }
 
-    public AppUser createUser(String email, String fullName, String passwordHash, String roleName) {
-        if (appUserRepository.findByEmail(email).isPresent()) {
+    public UserResponse createUser(CreateUserRequest request) {
+        if (appUserRepository.findByEmail(request.email()).isPresent()) {
             throw new IllegalArgumentException("User with this email already exists");
         }
 
-        Role role = roleRepository.findByName(roleName)
-                .orElseThrow(() -> new IllegalArgumentException("Role not found: " + roleName));
+        Role role = roleRepository.findByName(request.roleName())
+                .orElseThrow(() -> new IllegalArgumentException("Role not found: " + request.roleName()));
 
-        AppUser user = new AppUser(email, fullName, passwordHash, role);
+        AppUser user = new AppUser(
+                request.email(),
+                request.fullName(),
+                request.passwordHash(),
+                role
+        );
 
-        return appUserRepository.save(user);
+        AppUser savedUser = appUserRepository.save(user);
+
+        return UserResponse.from(savedUser);
     }
 
-    public List<AppUser> getAllUsers() {
-        return appUserRepository.findAll();
+    public List<UserResponse> getAllUsers() {
+        return appUserRepository.findAll()
+                .stream()
+                .map(UserResponse::from)
+                .toList();
     }
 
-    public AppUser getUserById(Long id) {
-        return appUserRepository.findById(id)
+    public UserResponse getUserById(Long id) {
+        AppUser user = appUserRepository.findById(id)
                 .orElseThrow(() -> new IllegalArgumentException("User not found with id: " + id));
+
+        return UserResponse.from(user);
     }
 }
